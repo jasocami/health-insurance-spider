@@ -1,0 +1,209 @@
+version: '3.7'
+
+services:
+
+  db:
+    image: mysql:5.7.25
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+    env_file:
+      - .env.db
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: redis:5.0.4
+    ports:
+      - "6379:6379"
+
+  web:
+    build:
+      context: ./healthy_scrapy_web
+      dockerfile: ./sys/django_base/Dockerfile
+      target: active-server
+      args:
+        - REQS_FILE=develop.txt
+    restart: on-failure
+    user: root
+    depends_on:
+      - db
+      - redis
+        # - front
+    image: healthy_scrapy:latest
+    working_dir: /local/app
+    env_file:
+      - .env.web
+    command: bash -c "python check_service.py --service-name mysql --ip db --port 3306 &&
+                      python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./healthy_scrapy_web:/local:delegated
+    ports:
+      - "80:8000"
+
+  saludonnet:
+    build:
+      context: ./healthy_scrapy_web
+      dockerfile: ./sys/django_base/Dockerfile
+      target: active-server
+      args:
+        - REQS_FILE=develop.txt
+    restart: on-failure
+    user: root
+    depends_on:
+      - db
+      - redis
+    image: healthy_scrapy:latest
+    working_dir: /local/app
+    env_file:
+      - .env.web
+    command: bash -c "python check_service.py --service-name mysql --ip db --port 3306 &&
+      scrapy crawl saludonnet"
+    volumes:
+      - ./healthy_scrapy_web:/local:delegated
+
+  clinicpoint:
+    build:
+      context: ./healthy_scrapy_web
+      dockerfile: ./sys/django_base/Dockerfile
+      target: active-server
+      args:
+        - REQS_FILE=develop.txt
+    restart: on-failure
+    user: root
+    depends_on:
+      - db
+      - redis
+    image: healthy_scrapy:latest
+    working_dir: /local/app
+    env_file:
+      - .env.web
+    command: bash -c "python check_service.py --service-name mysql --ip db --port 3306 &&
+      scrapy crawl clinicpoint"
+    volumes:
+      - ./healthy_scrapy_web:/local:delegated
+
+  smartsalus:
+    build:
+      context: ./healthy_scrapy_web
+      dockerfile: ./sys/django_base/Dockerfile
+      target: active-server
+      args:
+        - REQS_FILE=develop.txt
+    restart: on-failure
+    user: root
+    depends_on:
+      - db
+      - redis
+    image: healthy_scrapy:latest
+    working_dir: /local/app
+    env_file:
+      - .env.web
+    command: bash -c "python check_service.py --service-name mysql --ip db --port 3306 &&
+      scrapy crawl smartsalus"
+    volumes:
+      - ./healthy_scrapy_web:/local:delegated
+
+  iglobalmed:
+    build:
+      context: ./healthy_scrapy_web
+      dockerfile: ./sys/django_base/Dockerfile
+      target: active-server
+      args:
+        - REQS_FILE=develop.txt
+    restart: on-failure
+    user: root
+    depends_on:
+      - db
+      - redis
+    image: healthy_scrapy:latest
+    working_dir: /local/app
+    env_file:
+      - .env.web
+    command: bash -c "python check_service.py --service-name mysql --ip db --port 3306 &&
+      scrapy crawl iglobalmed"
+    volumes:
+      - ./healthy_scrapy_web:/local:delegated
+
+  operarme:
+    build:
+      context: ./healthy_scrapy_web
+      dockerfile: ./sys/django_base/Dockerfile
+      target: active-server
+      args:
+        - REQS_FILE=develop.txt
+    restart: on-failure
+    user: root
+    depends_on:
+      - db
+      - redis
+    image: healthy_scrapy:latest
+    working_dir: /local/app
+    env_file:
+      - .env.web
+    command: bash -c "python check_service.py --service-name mysql --ip db --port 3306 &&
+      scrapy crawl operarme"
+    volumes:
+      - ./healthy_scrapy_web:/local:delegated
+      
+  midiagnostico:
+    build:
+      context: ./healthy_scrapy_web
+      dockerfile: ./sys/django_base/Dockerfile
+      target: active-server
+      args:
+        - REQS_FILE=develop.txt
+    restart: on-failure
+    user: root
+    depends_on:
+      - db
+      - redis
+    image: healthy_scrapy:latest
+    working_dir: /local/app
+    env_file:
+      - .env.web
+    command: bash -c "python check_service.py --service-name mysql --ip db --port 3306 &&
+      scrapy crawl midiagnostico"
+    volumes:
+      - ./healthy_scrapy_web:/local:delegated
+  
+  bonomedico:
+    build:
+      context: ./healthy_scrapy_web
+      dockerfile: ./sys/django_base/Dockerfile
+      target: active-server
+      args:
+        - REQS_FILE=develop.txt
+    restart: on-failure
+    user: root
+    depends_on:
+      - db
+      - redis
+    image: healthy_scrapy:latest
+    working_dir: /local/app
+    env_file:
+      - .env.web
+    command: bash -c "python check_service.py --service-name mysql --ip db --port 3306 &&
+      scrapy crawl bonomedico"
+    volumes:
+      - ./healthy_scrapy_web:/local:delegated
+     
+  portalsaludsanitas:
+    build:
+      context: ./healthy_scrapy_web
+      dockerfile: ./sys/django_base/Dockerfile
+      target: active-server
+      args:
+        - REQS_FILE=develop.txt
+    restart: on-failure
+    user: root
+    depends_on:
+      - db
+      - redis
+    image: healthy_scrapy:latest
+    working_dir: /local/app
+    env_file:
+      - .env.web
+    command: bash -c "python check_service.py --service-name mysql --ip db --port 3306 &&
+      scrapy crawl portalsaludsanitas"
+    volumes:
+      - ./healthy_scrapy_web:/local:delegated

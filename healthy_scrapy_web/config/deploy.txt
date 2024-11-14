@@ -1,0 +1,4 @@
+-r common.txt
+
+# Web servers
+uWSGI==2.0.18
