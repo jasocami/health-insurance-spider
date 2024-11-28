@@ -1,6 +1,6 @@
 ## Health insurance
 
-Scrapy and Beautifulsoup in Django project that I had to do for a company to obtain their: prices, coverages, etc.
+Scrapy and Beautifulsoup in Django project to obtain their: prices, coverages, etc.
 to compare between them.
 
 * Scrapy
