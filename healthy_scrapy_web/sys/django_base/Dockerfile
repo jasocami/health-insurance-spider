@@ -29,9 +29,6 @@ COPY --chown=apprunner:apprunner ./config/ /local/config/
 
 ARG REQS_FILE
 
-RUN pip install --upgrade pip  \
-    && pip install --extra-index-url https://pypi-6etexgwgpa-ew.a.run.app/simple/ -r /local/config/${REQS_FILE:-"deploy.txt"}
-
 # Copy application code
 COPY --chown=apprunner:apprunner ./app/ /local/app/
 
