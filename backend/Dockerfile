@@ -1,0 +1,47 @@
+FROM python:3.11-slim AS active-server
+
+WORKDIR /app/
+
+# Add code
+COPY . .
+
+# Django
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install \
+      --no-install-recommends --no-install-suggests -y \
+      gettext \
+      gcc \
+      libc6-dev \
+        default-libmysqlclient-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && addgroup --gid 4000 apprunner \
+    && adduser --system --disabled-password --disabled-login --gecos "" --gid 4000 --uid 4000 apprunner \
+    && chown -R apprunner:apprunner /app \
+    && chsh -s /bin/false apprunner
+
+# Install PIP requirements
+COPY --chown=apprunner:apprunner ./requirements/ /app/requirements/
+
+ARG REQS_FILE=develop.txt
+RUN pip install --no-cache-dir -r /app/requirements/${REQS_FILE}
+
+# Copy application code
+COPY --chown=apprunner:apprunner . .
+
+# WORKDIR /app
+
+# Compile translations
+# Uncomment when locale folder is created and makemessages command is executed
+# RUN django-admin compilemessages
+
+RUN chmod +x entrypoint.sh
+
+
+USER apprunner
+
+EXPOSE 8000
+# CMD bash -c "uwsgi --http :8000 --master --module config.wsgi --processes 4 --buffer-size 32768"
+ENTRYPOINT ["bash", "entrypoint.sh"]

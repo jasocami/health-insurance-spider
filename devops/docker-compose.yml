@@ -1,0 +1,210 @@
+name: health_insurance_spider
+
+services:
+  db:
+    image: postgres:17
+    restart: always
+    env_file:
+      - ../.env.db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 5s
+      start_period: 10s
+      start_interval: 1s
+      timeout: 1s
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    # command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      start_period: 10s
+      start_interval: 1s
+      timeout: 1s
+    # volumes:
+    #  - redis_data:/data
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      args:
+        - REQS_FILE=develop.txt
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+      redis:
+        condition: service_healthy
+        required: true
+    env_file:
+      - ../backend/.env
+    volumes:
+      - ../backend:/app
+    ports:
+      - "8000:8000"
+
+  saludonnet:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.crawler
+      target: active-server
+      args:
+        - REQS_FILE=develop.txt
+    working_dir: /app
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+      redis:
+        condition: service_healthy
+        required: true
+    env_file:
+      - ../backend/.env
+    command: bash -c "scrapy crawl saludonnet"
+    volumes:
+      - ../backend:/app
+
+  clinicpoint:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.crawler
+      args:
+        - REQS_FILE=develop.txt
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+      redis:
+        condition: service_healthy
+        required: true
+    env_file:
+      - ../backend/.env
+    command: bash -c "scrapy crawl clinicpoint"
+    volumes:
+      - ../backend:/app
+
+  smartsalus:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.crawler
+      args:
+        - REQS_FILE=develop.txt
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+      redis:
+        condition: service_healthy
+        required: true
+    env_file:
+      - ../backend/.env
+    command: bash -c "scrapy crawl smartsalus"
+    volumes:
+      - ../backend:/app
+
+  iglobalmed:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.crawler
+      args:
+        - REQS_FILE=develop.txt
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+      redis:
+        condition: service_healthy
+        required: true
+    env_file:
+      - ../backend/.env
+    command: bash -c "scrapy crawl iglobalmed"
+    volumes:
+      - ../backend:/app
+
+  operarme:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.crawler
+      args:
+        - REQS_FILE=develop.txt
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+      redis:
+        condition: service_healthy
+        required: true
+    env_file:
+      - ../backend/.env
+    command: bash -c "scrapy crawl operarme"
+    volumes:
+      - ../backend:/app
+      
+  midiagnostico:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.crawler
+      args:
+        - REQS_FILE=develop.txt
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+      redis:
+        condition: service_healthy
+        required: true
+    env_file:
+      - ../backend/.env
+    command: bash -c "scrapy crawl midiagnostico"
+    volumes:
+      - ../backend:/app
+  
+  bonomedico:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.crawler
+      args:
+        - REQS_FILE=develop.txt
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+      redis:
+        condition: service_healthy
+        required: true
+    env_file:
+      - ../backend/.env
+    command: bash -c "scrapy crawl bonomedico"
+    volumes:
+      - ../backend:/app
+     
+  portalsaludsanitas:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.crawler
+      args:
+        - REQS_FILE=develop.txt
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+      redis:
+        condition: service_healthy
+        required: true
+    env_file:
+      - ../backend/.env
+    command: bash -c "scrapy crawl portalsaludsanitas"
+    volumes:
+      - ../backend:/app
+
+volumes:
+  pg_data:
+  redis_data:

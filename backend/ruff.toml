@@ -1,0 +1,23 @@
+target-version = "py311"
+line-length = 120
+exclude = [
+    "*/migrations/*",
+    "*/__pycache__/*",
+]
+
+[lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes (unused imports, undefined names)
+    "UP",   # pyupgrade (f-strings, modern syntax)
+    "A",    # flake8-builtins (don't shadow built-ins like 'dict', 'list')
+    "E722", # bare except
+]
+ignore = [
+    "E501", # line too long (handled by formatter)
+]
+
+
+[format]
+quote-style = "double"
+indent-style = "space"

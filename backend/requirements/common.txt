@@ -1,0 +1,12 @@
+# Django
+Django==5.2.14
+
+# Redis
+django-redis>=5.4.0,<6.0.0
+
+# Database
+psycopg2-binary>=2.9.12
+
+# Scrapy
+Scrapy==2.16.0
+beautifulsoup4==4.14.3
