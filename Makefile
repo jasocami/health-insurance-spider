@@ -2,7 +2,12 @@
 COMPOSE_FILE := devops/docker-compose.yaml
 
 # Phony targets
-.PHONY: up stop down
+.PHONY: up stop down init
+
+# Initialize environment files from samples
+init:
+	cp ./env.db.sample ./env.db
+	cp ./backend/env.sample ./backend/.env
 
 # Start Docker Compose
 up:
