@@ -1,5 +1,5 @@
 # Docker Compose Configuration
-COMPOSE_FILE := devops/docker-compose.yaml
+COMPOSE_FILE := devops/docker-compose.yml
 
 # Phony targets
 .PHONY: up stop down init
