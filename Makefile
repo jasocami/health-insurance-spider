@@ -11,7 +11,7 @@ init:
 
 # Start Docker Compose
 up:
-	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose -f $(COMPOSE_FILE) up backend
 
 # Stop Docker Compose
 stop:
